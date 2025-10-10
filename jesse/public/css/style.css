@@ -1,0 +1,8 @@
+/* public/css/style.css */
+body { font-family: "Inter", Arial, Helvetica, sans-serif; background: #f6fbfa; color: #0b2f2a; }
+.navbar-brand { font-size: 1.1rem; color: #fff !important; }
+a.nav-link { color: rgba(255,255,255,0.95) !important; }
+.card { border-radius: 12px; }
+.btn-success { background-color: #0b6b5b; border-color: #0b6b5b; }
+.btn-success:hover { background-color: #095048; border-color: #095048; }
+footer { background: #ffffff; }
