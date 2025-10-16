@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-slate-950/80 backdrop-blur border-b border-white/10 text-slate-100 shadow-lg shadow-slate-950/40">
+<nav x-data="{ open: false }" class="relative z-50 bg-slate-950/80 backdrop-blur border-b border-white/10 text-slate-100 shadow-lg shadow-slate-950/40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -6,7 +6,6 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ auth()->check() ? route('home') : url('/') }}" class="flex items-center gap-2">
-                        <x-application-logo class="block h-10 w-auto fill-current text-blue-400" />
                         <span class="hidden text-lg font-semibold tracking-wide text-white sm:inline">RetinaCare</span>
                     </a>
                 </div>
@@ -22,6 +21,10 @@
                             {{ __('Predict') }}
                         </x-nav-link>
                     @endauth
+
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+                        {{ __('Contact') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -45,7 +48,7 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
+                            <x-dropdown-link :href="route('profile.edit')" class="text-slate-200 hover:text-white hover:bg-white/10">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
@@ -53,6 +56,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
+                                                 class="text-slate-200 hover:text-white hover:bg-white/10"
                                                  onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
@@ -102,6 +106,10 @@
                     {{ __('Predict') }}
                 </x-responsive-nav-link>
             @endauth
+
+            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+                {{ __('Contact') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Auth Options -->
