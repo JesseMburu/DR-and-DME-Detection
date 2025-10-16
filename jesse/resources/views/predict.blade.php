@@ -8,9 +8,7 @@
         <div class="max-w-6xl mx-auto px-6 py-16 lg:py-24">
             <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
                 <div class="space-y-6">
-                    <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-sm font-semibold text-blue-200 ring-1 ring-white/15">
-                        AI-Assisted Screening
-                    </span>
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-sm font-semibold text-blue-200 ring-1 ring-white/15">AI-Assisted Screening</span>
                     <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">Predict Retinopathy in Seconds</h1>
                     <p class="text-lg text-slate-300">
                         Upload a retina fundus image to receive an instant AI prediction for diabetic retinopathy and macular edema risk.
@@ -35,22 +33,104 @@
                 </div>
 
                 <div id="upload" class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
-                    <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6 text-center">
-                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/20 text-blue-300">
-                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5.25c1.148 0 2.25.285 3.195.81a3.755 3.755 0 011.68 2.045c.17.482.267.99.267 1.512 0 .523-.097 1.03-.267 1.512-.289.82-.82 1.533-1.68 2.045A6.75 6.75 0 1112 5.25z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 14.25L18 16.5m0 0l2.25 2.25M18 16.5l2.25-2.25M18 16.5l-2.25 2.25" />
-                            </svg>
-                        </div>
-                        <h2 class="mt-4 text-xl font-semibold text-white">Awaiting your next scan</h2>
-                        <p class="mt-2 text-sm text-slate-300">Drag and drop your image or click “Upload Image” to begin. RetinaCare supports JPG, PNG, and DICOM exports.</p>
+                    <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+                        @if (session('status'))
+                            <div class="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-600/10 px-4 py-3 text-sm text-emerald-200">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
-                        <div class="mt-6 rounded-xl border border-white/10 bg-slate-900/60 p-4 text-left text-sm text-slate-300">
+                        @if ($errors->has('predict'))
+                            <div class="mb-4 rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                                {{ $errors->first('predict') }}
+                            </div>
+                        @endif
+
+                        <h2 class="text-xl font-semibold text-white">Upload a retina image</h2>
+                        <p class="mt-2 text-sm text-slate-300">Supported formats: JPG, PNG, BMP (max 5MB). High quality scans yield better predictions.</p>
+
+                        <form method="POST" action="{{ route('predict.store') }}" enctype="multipart/form-data" class="mt-6 space-y-5">
+                            @csrf
+                            <div>
+                                <label for="image" class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-slate-900/40 px-6 py-10 text-center transition hover:border-blue-400 hover:bg-slate-900/60">
+                                    <svg class="h-12 w-12 text-blue-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 15.75v-7.5A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25v7.5A2.25 2.25 0 0118.75 18H5.25A2.25 2.25 0 013 15.75z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l6.75 4.5a2.25 2.25 0 002.5 0L21 9" />
+                                    </svg>
+                                    <span class="mt-3 text-sm font-semibold text-white">Drop your image here or click to browse</span>
+                                    <span class="mt-1 text-xs text-slate-400">Choose a clear fundus photograph without reflections or blur.</span>
+                                    <input id="image" name="image" type="file" accept="image/*" class="hidden" required>
+                                </label>
+                                @error('image')
+                                    <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-700/40 transition hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400">
+                                {{ __('Run prediction') }}
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0-6-6m6 6-6 6" />
+                                </svg>
+                            </button>
+                        </form>
+
+                        <div class="mt-6 rounded-xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-300">
                             <p class="font-semibold text-white">Need help?</p>
-                            <p class="mt-1">Check our imaging guide to ensure proper lighting, focus, and field-of-view for the most accurate predictions.</p>
+                            <p class="mt-1">Review our capture checklist to avoid motion blur, poor focus, or occlusions. Accurate inputs yield actionable predictions.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-slate-950 py-16 text-slate-100">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-semibold">Recent predictions</h2>
+                    <p class="mt-1 text-sm text-slate-400">Only the latest 10 entries are shown. Visit the database for full history.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-slate-950/30">
+                <table class="min-w-full divide-y divide-white/10 text-left text-sm">
+                    <thead class="bg-white/5 text-slate-300">
+                        <tr>
+                            <th class="px-6 py-3 font-semibold">Uploaded</th>
+                            <th class="px-6 py-3 font-semibold">File</th>
+                            <th class="px-6 py-3 font-semibold">Diagnosis</th>
+                            <th class="px-6 py-3 font-semibold">Confidence</th>
+                            <th class="px-6 py-3 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5 text-slate-200">
+                        @forelse ($predictions as $prediction)
+                            <tr>
+                                <td class="px-6 py-4">{{ $prediction->created_at->format('d M Y, H:i') }}</td>
+                                <td class="px-6 py-4">{{ $prediction->original_filename }}</td>
+                                <td class="px-6 py-4">{{ $prediction->diagnosis ?? '—' }}</td>
+                                <td class="px-6 py-4">
+                                    @if (! is_null($prediction->confidence))
+                                        {{ number_format($prediction->confidence * 100, 1) }}%
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold {{ $prediction->status === 'completed' ? 'bg-emerald-500/15 text-emerald-200' : ($prediction->status === 'failed' ? 'bg-red-500/15 text-red-200' : 'bg-blue-500/15 text-blue-200') }}">
+                                        <span class="h-2 w-2 rounded-full {{ $prediction->status === 'completed' ? 'bg-emerald-300' : ($prediction->status === 'failed' ? 'bg-red-300' : 'bg-blue-300') }}"></span>
+                                        {{ ucfirst($prediction->status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-6 text-center text-sm text-slate-400">No predictions yet. Upload your first retina scan to see results here.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -80,3 +160,4 @@
         </div>
     </section>
 </x-app-layout>
+
