@@ -20,7 +20,10 @@ class PredictorService
      */
     public function predict(string $imagePath): array
     {
-        $scriptPath = base_path('predict/scripts/run_inference.py');
+        $scriptPath = config(
+            'predict.script_path',
+            base_path('../backend/predict/scripts/run_inference.py'),
+        );
 
         if (! file_exists($scriptPath)) {
             Log::warning('Prediction script not found.', ['path' => $scriptPath]);
@@ -57,4 +60,3 @@ class PredictorService
         ];
     }
 }
-

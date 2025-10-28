@@ -1,0 +1,21 @@
+# Root-level ignores for generated artifacts and local tooling
+
+# Python virtual environments
+.venv/
+venv/
+
+# PHP/Laravel dependencies (root-level composer install)
+vendor/
+
+# Node tooling
+node_modules/
+
+# Backend prediction assets that are large/generated
+backend/predict/scripts/results/
+backend/predict/scripts/tmp/
+backend/predict/scripts/__pycache__/
+backend/predict/scripts/inference/__pycache__/
+
+# Bytecode/cache files
+__pycache__/
+*.pyc
